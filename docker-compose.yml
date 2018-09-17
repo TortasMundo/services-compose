@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+  kitchen-api:
+    build:
+      context: ./kitchen-api
+    container_name: kitchen-api
+    ports:
+      - 4000:4000
+      - 9000:9000
+    depends_on:
+      - database
+      - caching
+    volumes:
+      - ./kitchen-api:/var/app/:rw,cached
+    env_file:
+      - 'variables.env'
+    command: >
+      sh -c '
+      if test -d node_modules;
+      then
+        echo node_modules_exists ;
+      else
+        cp -a /tmp/node_modules /var/app;
+      fi &&
+      npm run startd
+      '
+  caching:
+    image: redis:4.0-alpine
+    container_name: caching
+    ports:
+      - 16379:6379
+    volumes:
+      - cache:/data
+    user: redis
+  database:
+    build:
+      context: ./database
+    container_name: database
+    restart: always
+    ports:
+      - 15432:5432
+    env_file:
+      - 'variables.env'
+    environment:
+      - DEBUG=false
+    volumes:
+      - ./database:/var/app/:rw,cached
+      - database:/var/lib/postgresql/
+    user: postgres
+volumes:
+  cache:
+  database:
