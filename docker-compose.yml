@@ -52,7 +52,7 @@ services:
   ordering-service:
     build:
       context: ./ordering-service
-    container_name: ordering-service
+    container_name: tm-ordering-service
     ports:
     - 4002:4002
     - 9002:9002
@@ -75,7 +75,7 @@ services:
       '
   caching:
     image: redis:4.0-alpine
-    container_name: caching
+    container_name: tm-caching
     ports:
       - 16379:6379
     volumes:
@@ -84,7 +84,7 @@ services:
   database:
     build:
       context: ./database
-    container_name: database
+    container_name: tm-database
     restart: always
     ports:
       - 15432:5432
