@@ -25,6 +25,30 @@ services:
       fi &&
       npm run startd
       '
+  order-taker-api:
+    build:
+      context: ./order-taker-api
+    container_name: order-taker-api
+    ports:
+    - 4001:4001
+    - 9001:9001
+    depends_on:
+    - database
+    - caching
+    volumes:
+    - ./order-taker-api:/var/app/:rw,cached
+    env_file:
+    - 'variables.env'
+    command: >
+      sh -c '
+      if test -d node_modules;
+      then
+        echo node_modules_exists ;
+      else
+        cp -a /tmp/node_modules /var/app;
+      fi &&
+      npm run startd
+      '
   caching:
     image: redis:4.0-alpine
     container_name: caching
