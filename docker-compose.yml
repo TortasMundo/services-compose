@@ -49,6 +49,30 @@ services:
       fi &&
       npm run startd
       '
+  ordering-service:
+    build:
+      context: ./ordering-service
+    container_name: ordering-service
+    ports:
+    - 4002:4002
+    - 9002:9002
+    depends_on:
+    - database
+    - caching
+    volumes:
+    - ./ordering-service:/var/app/:rw,cached
+    env_file:
+    - 'variables.env'
+    command: >
+      sh -c '
+      if test -d node_modules;
+      then
+        echo node_modules_exists ;
+      else
+        cp -a /tmp/node_modules /var/app;
+      fi &&
+      npm run startd
+      '
   caching:
     image: redis:4.0-alpine
     container_name: caching
