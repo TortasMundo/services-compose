@@ -6,7 +6,7 @@ services:
       context: ./kitchen-api
     container_name: kitchen-api
     ports:
-      - 4000:4000
+      - 5000:5000
       - 9000:9000
     depends_on:
       - database
@@ -30,7 +30,7 @@ services:
       context: ./order-taker-api
     container_name: order-taker-api
     ports:
-    - 4001:4001
+    - 5001:5001
     - 9001:9001
     depends_on:
     - database
@@ -54,7 +54,7 @@ services:
       context: ./ordering-service
     container_name: tm-ordering-service
     ports:
-    - 4002:4002
+    - 5002:5002
     - 9002:9002
     depends_on:
     - database
